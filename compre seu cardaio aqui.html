@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedido Cardápio</title>
+<style>
+body { font-family: Arial, sans-serif; background-color: #ffe6f0; padding: 20px; }
+.section { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+h2 { margin-top: 0; }
+.opcoes-lista { list-style: none; padding-left: 0; }
+.opcoes-lista li { margin-bottom: 10px; }
+.produto { margin-bottom: 10px; }
+.conteudo-produto { margin-left: 20px; display: none; }
+.total { font-weight: bold; font-size: 18px; margin-top: 20px; }
+button { padding: 10px 15px; background-color: #ff69b4; border: none; color: #fff; border-radius: 5px; cursor: pointer; }
+button:hover { background-color: #e055a1; }
+input[type="number"] { width: 80px; }
+.upload-wrap input[type="file"] { display: block; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<form id="pedidoForm" onsubmit="enviarWhatsApp(event)">
+
+  <body>
+
+<!-- ====== TÍTULO PRINCIPAL ====== -->
+<header style="background-color:#800080; padding:30px 15px; text-align:center; border-radius:10px; margin-bottom:20px;">
+  <h1 style="color:#fff; font-size:28px; margin:0; font-family:Arial, sans-serif;">
+    CARDÁPIO, PANFLETOS E ARTES PROMOCIONAIS PARA SEU ESTABELECIMENTO
+  </h1>
+</header>
+
+<form id="pedidoForm" onsubmit="enviarWhatsApp(event)">
+
+
+<!-- ====== DADOS DO CLIENTE ====== -->
+<section class="section">
+  <h2>Dados do Cliente</h2>
+  <p>Seu Nome: 
+    <input type="text" name="Nome" placeholder="Ex: Kerolyn" required>
+  </p>
+  <p>Nome da Empresa: 
+    <input type="text" name="Nome_Empresa" placeholder="Ex: KerolynChan" required>
+  </p>
+</section>
+
+<!-- ====== DADOS DA EMPRESA ====== -->
+<section class="section">
+  <h2>Dados da Empresa</h2>
+  <p>Contato da Empresa: 
+    <input type="tel" name="Contato" placeholder="Ex: +5521123456789">
+  </p>
+  <p>Redes Sociais da Empresa: 
+    <input type="text" name="Rede_Social" placeholder="Ex: @Kerolynchan ou link">
+  </p>
+  <p>Já possui link de pedido? 
+    <input type="text" name="Link_Pedido" placeholder="Ex: link do iFood, WhatsApp...">
+  </p>
+  <p>Possui endereço físico? 
+    <input type="text" name="Endereco_Fisico" placeholder="Rua, número, bairro...">
+  </p>
+  <p>Mencionar horário de funcionamento? 
+    <input type="text" name="Horario_Funcionamento" placeholder="Ex: Seg-Sex 8h às 18h">
+  </p>
+</section>
+
+<!-- ====== RAMO DE VENDA ====== -->
+<section class="section">
+  <h2>Qual seu Ramo de Venda?</h2>
+  <select name="Ramo_Venda" required>
+    <option value="">Selecione...</option>
+    <option value="Doceria">Doceria</option>
+    <option value="Confeitaria">Confeitaria</option>
+    <option value="Padaria">Padaria</option>
+    <option value="Cafeteria">Cafeteria</option>
+    <option value="Pizzaria">Pizzaria</option>
+    <option value="Hamburgueria">Hamburgueria</option>
+    <option value="Lanchonete">Lanchonete</option>
+    <option value="Restaurante de comida caseira">Restaurante de comida caseira</option>
+    <option value="Restaurante japonês">Restaurante japonês</option>
+    <option value="Restaurante chinês">Restaurante chinês</option>
+    <option value="Restaurante árabe">Restaurante árabe</option>
+    <option value="Food truck">Food truck</option>
+    <option value="Marmitaria">Marmitaria</option>
+    <option value="Churrascaria">Churrascaria</option>
+    <option value="Sorveteria">Sorveteria</option>
+    <option value="Açaiteria">Açaiteria</option>
+    <option value="Bar">Bar</option>
+    <option value="Adega">Adega</option>
+    <option value="Distribuidora de bebida">Distribuidora de bebida</option>
+    <option value="Loja de milkshake">Loja de milkshake</option>
+    <option value="Quiosque">Quiosque</option>
+    <option value="Buffet">Buffet</option>
+    <option value="Fornecedor de doce para festa">Fornecedor de doce para festa</option>
+    <option value="Fornecedor de salgado para festa">Fornecedor de salgado para festa</option>
+    <option value="Fornecedor de salgado e doces para festa">Fornecedor de salgado e doces para festa</option>
+    <option value="Loja de utilidade">Loja de utilidade</option>
+    <option value="Artesanato">Artesanato</option>
+    <option value="Floricultura">Floricultura</option>
+    <option value="Petisco caseiro">Petisco caseiro</option>
+    <option value="Mini-mercado">Mini-mercado</option>
+    <option value="Pet Shop">Pet Shop</option>
+    <option value="Casa de Ração">Casa de Ração</option>
+  </select>
+
+  <label><input type="checkbox" name="faz_entrega"> Fornecem entrega?</label>
+  <p>Deseja mencionar o preço da entrega? <input type="text" name="Mencionar_Preco" placeholder="R$"></p>
+  <p>Descrição curta do seu ramo: <input type="text" name="Descricao_curta" placeholder="Ex: Confeitaria artesanal"></p>
+</section>
+
+<!-- ====== IDENTIDADE VISUAL ====== -->
+<section class="section">
+  <h2>Identidade Visual</h2>
+
+  <details>
+    <summary style="cursor:pointer; font-weight:bold; padding:5px 0;">
+      Já possui logotipo? (clique para escolher)
+    </summary>
+    <div class="logotipo-opcoes" style="margin-top:10px; padding-left:15px;">
+      <label><input type="radio" name="Logo" value="sim" data-preco="0"> Sim — vou enviar</label><br>
+      <label><input type="radio" name="Logo" value="simples" data-preco="15"> Comprar um simples — R$15,00</label><br>
+      <label><input type="radio" name="Logo" value="flat" data-preco="30"> Comprar um logo com personagem flat design — R$30,00</label><br>
+      <label><input type="radio" name="Logo" value="cartoon" data-preco="80"> Comprar um logo com cartoon — R$80,00</label><br>
+      <label><input type="radio" name="Logo" value="cartoonHQ" data-preco="75"> Comprar um logo cartoon HQ — R$75,00</label><br>
+      <label><input type="radio" name="Logo" value="pixel" data-preco="40"> Comprar um logo pixel arte — R$40,00</label><br>
+      <label><input type="radio" name="Logo" value="anime" data-preco="90"> Comprar um logo anime — R$90,00</label><br>
+      <label><input type="radio" name="Logo" value="pogo" data-preco="60"> Comprar um pogo chibi — R$60,00</label>
+    </div>
+</details>
+
+  <p>Fundo do cardápio? 
+  <select name="Fundo_Cardapio" required>
+    <option value="">Selecione...</option>
+    <option value="cor_estatica">Cor estática</option>
+    <option value="cor_degrade">Cor degradê</option>
+    <option value="imagem">Imagem</option>
+    <option value="loop_visual">Loop visual (ex: brilhando, vídeo em movimento)</option>
+  </select>
+  </p>
+  <p>Cores principais: <input type="text" name="Cor_Principal" placeholder="Ex: rosa #ff69b4, roxo #b027cc"></p>
+  <p>
+      📎 Envie a imagem deste produto manualmente pelo 
+      <a href="https://wa.me/5521978046832?text=Olá, estou enviando a imagem do produto ${label}" target="_blank" style="color:#ff69b4; font-weight:bold; text-decoration:none;">
+        WhatsApp
+      </a>
+    </p>
+
+
+<!-- ====== FORMATO DE ENTREGA ====== -->
+<section class="section">
+  <h2>📦 Formato de Entrega do Cardápio</h2>
+  <fieldset>
+    <legend>Escolha um formato (apenas 1)</legend>
+    <ul class="opcoes-lista">
+      <li><label><input type="radio" name="formatoEntrega" value="post" data-itens="1" required> 📷 Post (R$15, até 1 item)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="stories" data-itens="3"> 📱 Stories (R$30, até 3 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="panfletoSimples" data-itens="5"> 📰 Panfleto Simples (R$40, até 5 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="whatsapp" data-itens="8"> 💬 Formulário WhatsApp (R$50, até 8 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="panfletoCompleto" data-itens="12"> 📰✨ Panfleto Completo (R$80, até 12 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="pdf" data-itens="14"> 📄 Cardápio PDF (R$90, até 14 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="html" data-itens="15"> 💻 Cardápio HTML (R$100, até 15 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="link" data-itens="17"> 🔗 Cardápio Digital Link (R$130, até 17 itens)</label></li>
+      <li><label><input type="radio" name="formatoEntrega" value="website" data-itens="20"> 🌐 Website (R$400, até 20 itens)</label></li>
+    </ul>
+  </fieldset>
+</section>
+
+<!-- ====== PRODUTOS ====== -->
+<section class="section" id="produtosSection" style="display:none;">
+  <!-- Observação -->
+   <p>
+      📎 Envie as imagens dos produto manualmente (Ex: Poduto 1 FOTO , Produto 2 FOTO etc..) pelo 
+      <a href="https://wa.me/5521978046832?text=Olá, estou enviando a imagem do produto ${label}" target="_blank" style="color:#ff69b4; font-weight:bold; text-decoration:none;">
+        WhatsApp
+      </a>
+    </p>
+  <p style="font-size:14px; color:#555; margin-bottom:10px;">
+    ⚠️ Observação: você pode adicionar de <b>1 produto</b> até a quantidade informada no formato escolhido. 
+    Não é necessário preencher todos os produtos caso sobre espaço.
+  </p>
+
+  <h2>Descreva seus Produtos do CARDÁPIO</h2>
+  <div id="produtosContainer"></div>
+
+  <!-- Opção de adicionar extras -->
+  <p>
+    <label>
+      <input type="checkbox" id="addExtras"> Adicionar mais 5 produtos extras (+R$40)
+    </label>
+  </p>
+  <p style="font-size:14px; color:#555; margin-bottom:10px;">
+    ⚠️ Observação: você pode adicionar <b>5 produto</b> a mais no mesmo formato de entrega.
+  </p>
+  <div id="extrasContainer" style="display:none;"></div>
+  <!-- Opção de adicionar unitários -->
+<p style="margin-top:10px;">Adicionar produtos extras unitários (+R$15 cada):</p>
+<div id="extrasUnitarios" style="display:flex; gap:15px; flex-wrap:wrap;">
+  <label><input type="checkbox" class="singleExtraToggle" data-index="1"> +1 Produto</label>
+  <label><input type="checkbox" class="singleExtraToggle" data-index="2"> +1 Produto</label>
+  <label><input type="checkbox" class="singleExtraToggle" data-index="3"> +1 Produto</label>
+  <label><input type="checkbox" class="singleExtraToggle" data-index="4"> +1 Produto</label>
+  <label><input type="checkbox" class="singleExtraToggle" data-index="5"> +1 Produto</label>
+</div>
+<p style="font-size:14px; color:#555; margin-bottom:10px;">
+  ⚠️ Observação: Você pode adicionar <b>1 produto</b> a mais no estilo Post ou no mesmo estilo já selecionado.
+</p>
+<label><input type="radio" name="extraProduto" value="post"> 📷 Post </label>
+<label><input type="radio" name="extraProduto" value="mesmo"> Manter Estilo já Selecionado </label>
+
+<div id="singleExtrasContainer"></div>
+</section>
+
+<p class="total">Total: R$ <span id="totalValor">0.00</span></p>
+<button type="submit">Enviar Pedido</button>
+
+</form>
+
+<script>
+const produtosContainer = document.getElementById('produtosContainer');
+const produtosSection = document.getElementById('produtosSection');
+const extrasContainer = document.getElementById('extrasContainer');
+const addExtrasCheckbox = document.getElementById('addExtras');
+const singleExtrasContainer = document.getElementById('singleExtrasContainer');
+const totalSpan = document.getElementById('totalValor');
+let total = 0;
+
+// Valores dos formatos
+const formatoValores = {
+  post: 15,
+  stories: 30,
+  panfletoSimples: 40,
+  whatsapp: 50,
+  panfletoCompleto: 80,
+  pdf: 90,
+  html: 100,
+  link: 130,
+  website: 400
+};
+
+// Quando escolhe formato, mostra produtos
+document.querySelectorAll('input[name="formatoEntrega"]').forEach(radio => {
+  radio.addEventListener('change', function(){
+    const qtd = parseInt(this.dataset.itens);
+    produtosContainer.innerHTML = '';
+    produtosSection.style.display = 'block';
+    for(let i=1;i<=qtd;i++){
+      criaProduto(produtosContainer, i, false);
+    }
+    atualizaTotal();
+  });
+});
+
+// Listener extras de 5
+addExtrasCheckbox.addEventListener('change', function(){
+  extrasContainer.innerHTML = '';
+  if(this.checked){
+    extrasContainer.style.display = 'block';
+    for(let i=1;i<=5;i++){
+      criaProduto(extrasContainer, 'extra'+i, true);
+    }
+  } else {
+    extrasContainer.style.display = 'none';
+  }
+  atualizaTotal();
+});
+
+// Listener extras unitários (5 checkboxes que adicionam 1 produto cada)
+document.querySelectorAll('.singleExtraToggle').forEach(cb=>{
+  cb.addEventListener('change', function(){
+    const idx = this.dataset.index;
+    if(this.checked){
+      criaProduto(singleExtrasContainer, 'single'+idx, true);
+    } else {
+      // remove
+      const node = document.getElementById('produto-single'+idx);
+      if(node) node.remove();
+    }
+    atualizaTotal();
+  });
+});
+
+// Função para criar produto — id pode ser number or string (ex: 'extra1', 'single2')
+function criaProduto(container, id, extra){
+  const label = (extra ? 'Extra ' : '') + id;
+  const elementId = 'produto-'+String(id);
+  // se já existe, não cria duplicado
+  if(document.getElementById(elementId)) return;
+
+  const div = document.createElement('details');
+  div.className = 'produto';
+  div.id = elementId;
+  div.innerHTML = `
+    <summary>🍔 Produto ${label}</summary>
+    <div class="conteudo-produto">
+      <p>Produto: <input type="text" name="produto${id}" required></p>
+      <p>Descrição: <input type="text" name="descricao${id}"></p>
+      <p>Preço: R$ <input type="number" name="preco${id}" min="0" step="0.01" value="0"></p>
+      
+      <p><label><input type="checkbox" name="promocao${id}" class="promocao"> Este produto é uma promoção</label></p>
+      
+      <p><label><input type="checkbox" class="artePromo"> Criar ARTE PROMOCIONAL (+R$10)</label></p>
+      
+      <p>
+        <label><input type="radio" name="imagemOpcao${id}" value="nenhuma" checked> Sem imagem</label><br>
+        <label><input type="radio" name="imagemOpcao${id}" value="generica"> Usar imagem genérica</label><br>
+        <label><input type="radio" name="imagemOpcao${id}" value="propria"> Usar imagem própria</label>
+      </p>
+    </div>`;
+  container.appendChild(div);
+
+  const conteudo = div.querySelector('.conteudo-produto');
+  div.addEventListener('toggle', ()=>{ conteudo.style.display = div.open ? 'block':'none'; });
+
+  const precoInput = div.querySelector(`input[name="preco${id}"]`);
+  precoInput.addEventListener('input', atualizaTotal);
+
+  const artePromoCb = div.querySelector('.artePromo');
+  artePromoCb.addEventListener('change', atualizaTotal);
+
+  const imagemRadios = div.querySelectorAll(`input[name="imagemOpcao${id}"]`);
+  const fileInput = div.querySelector(`input[name="imagemProduto${id}"]`);
+  imagemRadios.forEach(r => {
+    r.addEventListener('change', ()=> {
+      if(r.value === 'propria' && r.checked){
+        fileInput.disabled = false;
+      } else if(r.checked){
+        fileInput.disabled = true;
+        fileInput.value = '';
+      }
+    });
+  });
+}
+
+// Atualiza quando trocar o logotipo
+document.querySelectorAll('input[name="Logo"]').forEach(radio=>{
+  radio.addEventListener('change', atualizaTotal);
+});
+
+function atualizaTotal(){
+  let soma = 0;
+
+  // Formato selecionado
+  const formatoSelecionado = document.querySelector('input[name="formatoEntrega"]:checked');
+  if(formatoSelecionado) soma += formatoValores[formatoSelecionado.value] || 0;
+
+  // Logotipo selecionado
+  const logoSelecionado = document.querySelector('input[name="Logo"]:checked');
+  if(logoSelecionado) soma += parseFloat(logoSelecionado.dataset.preco) || 0;
+
+  // Preços dos produtos (produtos principais, pack extras e single extras)
+  document.querySelectorAll('#produtosContainer input[type="number"], #extrasContainer input[type="number"], #singleExtrasContainer input[type="number"]').forEach(inp=>{
+    soma += parseFloat(inp.value) || 0;
+  });
+
+  // Artes promocionais (+R$10 cada)
+  document.querySelectorAll('.artePromo').forEach(cb=>{
+    if(cb.checked) soma += 10;
+  });
+
+  // Pacote de 5 extras (+R$40 se marcado)
+  if(addExtrasCheckbox.checked) soma += 40;
+
+  // Extras unitários (+R$15 por checkbox marcada)
+  const singleChecked = document.querySelectorAll('.singleExtraToggle:checked').length;
+  if(singleChecked) soma += singleChecked * 15;
+
+  total = soma;
+  totalSpan.textContent = total.toFixed(2);
+}
+
+// Enviar para WhatsApp (abre conversa com número definido)
+function enviarWhatsApp(e){
+  e.preventDefault();
+  const form = document.getElementById('pedidoForm');
+  const fd = new FormData(form);
+
+  // Monta mensagem organizada por seções
+  let mensagem = "📋 *Novo Pedido de Cardápio*\n\n";
+
+  // Dados do cliente
+  mensagem += "*Dados do Cliente*\n";
+  if(fd.get('Nome')) mensagem += `Nome: ${fd.get('Nome')}\n`;
+  if(fd.get('Nome_Empresa')) mensagem += `Nome da Empresa: ${fd.get('Nome_Empresa')}\n`;
+  mensagem += "\n";
+
+  // Dados da empresa
+  mensagem += "*Dados da Empresa*\n";
+  if(fd.get('Contato')) mensagem += `Contato: ${fd.get('Contato')}\n`;
+  if(fd.get('Rede_Social')) mensagem += `Redes sociais: ${fd.get('Rede_Social')}\n`;
+  if(fd.get('Link_Pedido')) mensagem += `Link pedido: ${fd.get('Link_Pedido')}\n`;
+  if(fd.get('Endereco_Fisico')) mensagem += `Endereço: ${fd.get('Endereco_Fisico')}\n`;
+  if(fd.get('Horario_Funcionamento')) mensagem += `Horário: ${fd.get('Horario_Funcionamento')}\n`;
+  mensagem += "\n";
+
+  // Ramo
+  mensagem += "*Ramo de Venda*\n";
+  if(fd.get('Ramo_Venda')) mensagem += `${fd.get('Ramo_Venda')}\n`;
+  if(fd.get('Descricao_curta')) mensagem += `Descrição: ${fd.get('Descricao_curta')}\n`;
+  if(fd.get('Mencionar_Preco')) mensagem += `Preço entrega (se informou): ${fd.get('Mencionar_Preco')}\n`;
+  mensagem += "\n";
+
+  // Identidade visual
+  mensagem += "*Identidade Visual*\n";
+  const logoSel = document.querySelector('input[name="Logo"]:checked');
+  if(logoSel) mensagem += `Logotipo: ${logoSel.value} (R$${logoSel.dataset.preco || 0})\n`;
+  if(fd.get('Fundo_Cardapio')) mensagem += `Fundo do cardápio: ${fd.get('Fundo_Cardapio')}\n`;
+  if(fd.get('Cor_Principal')) mensagem += `Cores: ${fd.get('Cor_Principal')}\n`;
+  mensagem += "\n";
+
+  // Formato
+  mensagem += "*Formato de Entrega*\n";
+  const formato = document.querySelector('input[name="formatoEntrega"]:checked');
+  if(formato) mensagem += `${formato.value} (R$${formatoValores[formato.value] || 0})\n`;
+  mensagem += "\n";
+
+  // Produtos (main)
+  function coletaProdutos(container){
+    const lista = [];
+    container.querySelectorAll('.produto').forEach((detail, idx) => {
+      const nome = detail.querySelector('input[name^="produto"]')?.value || '';
+      const desc = detail.querySelector('input[name^="descricao"]')?.value || '';
+      const preco = detail.querySelector('input[name^="preco"]')?.value || '';
+      const promocao = detail.querySelector('input[name^="promocao"]')?.checked ? 'Sim' : 'Não';
+      const arte = detail.querySelector('.artePromo')?.checked ? 'Sim' : 'Não';
+      lista.push({nome, desc, preco, promocao, arte});
+    });
+    return lista;
+  }
+
+  const produtosMain = coletaProdutos(produtosContainer);
+  if(produtosMain.length){
+    mensagem += "*Produtos*\n";
+    produtosMain.forEach((p,i)=>{
+      mensagem += `${i+1}) ${p.nome || '(sem nome)'} — ${p.desc || ''} — R$ ${p.preco || '0.00'} — Promoção: ${p.promocao} — Arte: ${p.arte}\n`;
+    });
+    mensagem += "\n";
+  }
+
+  // Pack extras
+  const extrasPack = coletaProdutos(extrasContainer);
+  if(extrasPack.length){
+    mensagem += "*Pacote 5 Extras* (incluso +R$40)\n";
+    extrasPack.forEach((p,i)=>{
+      mensagem += `${i+1}) ${p.nome || '(sem nome)'} — ${p.desc || ''} — R$ ${p.preco || '0.00'} — Promoção: ${p.promocao} — Arte: ${p.arte}\n`;
+    });
+    mensagem += "\n";
+  }
+
+  // Single extras
+  const singleExtras = coletaProdutos(singleExtrasContainer);
+  if(singleExtras.length){
+    mensagem += "*Extras Unitários* (+R$15 por extra)\n";
+    singleExtras.forEach((p,i)=>{
+      mensagem += `${i+1}) ${p.nome || '(sem nome)'} — ${p.desc || ''} — R$ ${p.preco || '0.00'} — Promoção: ${p.promocao} — Arte: ${p.arte}\n`;
+    });
+    mensagem += "\n";
+  }
+
+  mensagem += `💰 *Total*: R$ ${total.toFixed(2)}\n`;
+
+  // Envia para o seu número
+  const telefone = '5521978046832';
+  const url = 'https://wa.me/' + telefone + '?text=' + encodeURIComponent(mensagem);
+  window.open(url, '_blank');
+}
+</script>
+
+</body>
+</html>
