@@ -309,80 +309,79 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Função para criar produto — id pode ser number or string (ex: 'extra1', 'single2')
-  function criaProduto(container, id, extra){
-    // label legível
-    let label = (extra ? 'Extra ' : '') + String(id);
-    // se id for tipo 'single1', queremos mostrar "+1 Produto Extra 1" no summary? Mantive algo simples.
-    const elementId = 'produto-'+String(id);
-    // se já existe, não cria duplicado
-    if(document.getElementById(elementId)) return;
+function criaProduto(container, id, extra){
+  // label legível
+  let label = (extra ? 'Extra ' : '') + String(id);
+  const elementId = 'produto-'+String(id);
+  // se já existe, não cria duplicado
+  if(document.getElementById(elementId)) return;
 
-    const div = document.createElement('details');
-    div.className = 'produto';
-    div.id = elementId;
+  const div = document.createElement('details');
+  div.className = 'produto';
+  div.id = elementId;
 
-    div.innerHTML = `
-      <summary>🍔 Produto ${label}</summary>
-      <div class="conteudo-produto">
-        <p>Produto: <input type="text" name="produto${id}" required></p>
-        <p>Descrição: <input type="text" name="descricao${id}"></p>
-        <p>Preço: R$ <input type="number" name="preco${id}" min="0" step="0.01" value="0"></p>
-        <p><label><input type="checkbox" name="promocao${id}" class="promocao"> Este produto é uma promoção</label></p>
-        <p><label><input type="checkbox" class="artePromo"> Criar ARTE PROMOCIONAL (+R$10)</label></p>
-      </div>
-    `;
-    container.appendChild(div);
+  div.innerHTML = `
+    <summary>🍔 Produto ${label}</summary>
+    <div class="conteudo-produto">
+      <p>Produto: <input type="text" name="produto${id}" required></p>
+      <p>Descrição: <input type="text" name="descricao${id}"></p>
+      <p>Preço (apenas informativo): R$ <input type="number" name="preco${id}" min="0" step="0.01" value="0"></p>
+      <p><label><input type="checkbox" name="promocao${id}" class="promocao"> Este produto é uma promoção</label></p>
+      <p><label><input type="checkbox" class="artePromo"> Criar ARTE PROMOCIONAL (+R$10)</label></p>
+    </div>
+  `;
+  container.appendChild(div);
 
-    // toggle de exibição
-    const conteudo = div.querySelector('.conteudo-produto');
-    div.addEventListener('toggle', ()=>{ conteudo.style.display = div.open ? 'block':'none'; });
+  // toggle de exibição
+  const conteudo = div.querySelector('.conteudo-produto');
+  div.addEventListener('toggle', ()=>{ conteudo.style.display = div.open ? 'block':'none'; });
 
-    // listeners
-    const precoInput = div.querySelector(`input[name="preco${id}"]`);
-    precoInput.addEventListener('input', atualizaTotal);
+  // NÃO adicionamos listener do campo "preco" para o atualizaTotal()
+  // (o preço do produto é apenas informativo e não conta no total do serviço)
 
-    const artePromoCb = div.querySelector('.artePromo');
+  // apenas bind para a checkbox de arte promocional (essa SÍ entra no total)
+  const artePromoCb = div.querySelector('.artePromo');
+  if(artePromoCb){
     artePromoCb.addEventListener('change', atualizaTotal);
   }
+}
 
-  // Atualiza quando trocar o logotipo
-  function bindLogoListeners(){
-    document.querySelectorAll('input[name="Logo"]').forEach(radio=>{
-      radio.addEventListener('change', atualizaTotal);
-    });
-  }
+// Atualiza quando trocar o logotipo
+function bindLogoListeners(){
+  document.querySelectorAll('input[name="Logo"]').forEach(radio=>{
+    radio.addEventListener('change', atualizaTotal);
+  });
+}
 
-  function atualizaTotal(){
-    let soma = 0;
+function atualizaTotal(){
+  let soma = 0;
 
-    // Formato selecionado
-    const formatoSelecionado = document.querySelector('input[name="formatoEntrega"]:checked');
-    if(formatoSelecionado) soma += formatoValores[formatoSelecionado.value] || 0;
+  // Formato selecionado
+  const formatoSelecionado = document.querySelector('input[name="formatoEntrega"]:checked');
+  if(formatoSelecionado) soma += formatoValores[formatoSelecionado.value] || 0;
 
-    // Logotipo selecionado
-    const logoSelecionado = document.querySelector('input[name="Logo"]:checked');
-    if(logoSelecionado) soma += parseFloat(logoSelecionado.dataset.preco || 0);
+  // Logotipo selecionado
+  const logoSelecionado = document.querySelector('input[name="Logo"]:checked');
+  if(logoSelecionado) soma += parseFloat(logoSelecionado.dataset.preco || 0);
 
-    // Preços dos produtos (produtos principais, pack extras e single extras)
-    document.querySelectorAll('#produtosContainer input[type="number"], #extrasContainer input[type="number"], #singleExtrasContainer input[type="number"]').forEach(inp=>{
-      soma += parseFloat(inp.value) || 0;
-    });
+  // NOTA: removido aqui a soma dos preços individuais dos produtos.
+  // O campo preço dos produtos é só informativo (vai pro WhatsApp) e NÃO entra no cálculo.
 
-    // Artes promocionais (+R$10 cada)
-    document.querySelectorAll('#produtosContainer .artePromo, #extrasContainer .artePromo, #singleExtrasContainer .artePromo').forEach(cb=>{
-      if(cb.checked) soma += 10;
-    });
+  // Artes promocionais (+R$10 cada) — conta em qualquer container
+  document.querySelectorAll('#produtosContainer .artePromo, #extrasContainer .artePromo, #singleExtrasContainer .artePromo').forEach(cb=>{
+    if(cb.checked) soma += 10;
+  });
 
-    // Pacote de 5 extras (+R$40 se marcado)
-    if(addExtrasCheckbox.checked) soma += 40;
+  // Pacote de 5 extras (+R$40 se marcado)
+  if(addExtrasCheckbox.checked) soma += 40;
 
-    // Extras unitários (+R$15 por checkbox marcada)
-    const singleChecked = document.querySelectorAll('.singleExtraToggle:checked').length;
-    if(singleChecked) soma += singleChecked * 15;
+  // Extras unitários (+R$15 por checkbox marcada)
+  const singleChecked = document.querySelectorAll('.singleExtraToggle:checked').length;
+  if(singleChecked) soma += singleChecked * 15;
 
-    total = soma;
-    totalSpan.textContent = total.toFixed(2);
-  }
+  total = soma;
+  totalSpan.textContent = total.toFixed(2);
+}
 
   // Monta mensagem e envia para WhatsApp
   function enviarWhatsApp(e) {
