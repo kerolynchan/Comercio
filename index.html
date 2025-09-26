@@ -325,7 +325,9 @@ function criaProduto(container, id, extra){
     <div class="conteudo-produto">
       <p>Produto: <input type="text" name="produto${id}" required></p>
       <p>Descrição: <input type="text" name="descricao${id}"></p>
-      <p>Preço (apenas informativo): R$ <input type="number" name="preco${id}" min="0" step="0.01" value="0"></p>
+      <p>Preço:
+      <input type="text" name="seupreço" placeholder="Ex: R$1,99" required>
+    </p>
       <p><label><input type="checkbox" name="promocao${id}" class="promocao"> Este produto é uma promoção</label></p>
       <p><label><input type="checkbox" class="artePromo"> Criar ARTE PROMOCIONAL (+R$10)</label></p>
     </div>
@@ -452,7 +454,7 @@ function atualizaTotal(){
         mensagem += `\n🔹 *Produto ${i+1}*\n`;
         mensagem += `   • Nome: ${p.nome || '(sem nome)'}\n`;
         mensagem += `   • Descrição: ${p.desc || '(sem descrição)'}\n`;
-        mensagem += `   • Preço: R$ ${p.preco || '0.00'}\n`;
+        mensagem += `   • Preço: R$ ${p.nome || '(seupreço)'}\n`;
         mensagem += `   • Promoção: ${p.promocao}\n`;
         mensagem += `   • Arte Promocional: ${p.arte}\n`;
       });
